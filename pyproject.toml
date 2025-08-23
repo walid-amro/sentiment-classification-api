@@ -1,0 +1,48 @@
+[project]
+name = "sentiment-classification-api"
+version = "0.1.0"
+description = "Text sentiment classification API with vLLM as an inference backend"
+readme = "README.md"
+authors = [{ name = "Walid Amro", email = "walidamr.work@gmail.com" }]
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.116.1",
+  "gunicorn>=23.0.0",
+  "orjson>=3.11.2",
+  "pydantic>=2.11.7",
+  "pydantic-settings>=2.10.1",
+  "uvicorn>=0.35.0",
+  "uvloop>=0.21.0",
+  "vllm>=0.10.1.1",
+]
+
+[build-system]
+requires = ["uv_build>=0.8.13,<0.9.0"]
+build-backend = "uv_build"
+
+[project.scripts]
+run-api-server = "app.entrypoints.cli:main"
+
+[tool.uv.build-backend]
+module-name = "app"
+
+[dependency-groups]
+dev = [
+  { include-group = "static-analysis" },
+  { include-group = "interactive-dev" },
+]
+interactive-dev = ["ipykernel>=6.30.1", "ipython>=9.4.0"]
+static-analysis = ["basedpyright>=1.31.3", "ruff>=0.12.10"]
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cu129", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+torchvision = [
+  { index = "pytorch-cu129", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu129"
+url = "https://download.pytorch.org/whl/cu129"
+explicit = true
