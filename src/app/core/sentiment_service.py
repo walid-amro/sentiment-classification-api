@@ -61,7 +61,7 @@ class SentimentAnalyzer:
         if endpoint_path == "/classify":
             # Pooling model such as BERT
             return dict(input=text, activation=True)
-        elif endpoint_path == "/chat/completions":
+        elif endpoint_path == "/v1/chat/completions":
             # Generative model such as Gemma
             raise NotImplementedError()
         else:
