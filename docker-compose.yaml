@@ -1,0 +1,65 @@
+services:
+  vllm-mixed:
+    image: docker.io/vllm/vllm-openai:v0.10.1.1  # use the version from env
+    container_name: vllm-mixed
+    ipc: "host"
+
+    environment:
+      GPU_PERCENTAGE: 0.45
+
+    volumes:
+      - ${HF_CACHE_DIR}:/root/.cache/huggingface/hub
+
+    restart: always
+
+    ports:
+      - "8000:8000"
+
+    command: ["--model", "clapAI/modernBERT-large-multilingual-sentiment"]
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  vllm-arabic:
+    image: docker.io/vllm/vllm-openai:v0.10.1.1  # use the version from env
+    container_name: vllm-arabic
+    ipc: "host"
+
+    environment:
+      GPU_PERCENTAGE: 0.45
+
+    volumes:
+      - ${HF_CACHE_DIR}:/root/.cache/huggingface/hub
+
+    restart: always
+
+    ports:
+      - "8001:8000"
+
+    command: ["--model", "CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment"]
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+

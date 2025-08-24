@@ -14,8 +14,16 @@ class SentimentAnalyzer:
         inference_endpoint_for_mixed: str,
         inference_endpoint_for_arabic: str | None = None,
         inference_endpoint_for_latin: str | None = None,
+        check_upstream_health: bool = False,
     ):
         self.session = requests.Session()
+        self.inference_endpoint_for_mixed = inference_endpoint_for_mixed
+        self.inference_endpoint_for_arabic = inference_endpoint_for_arabic
+        self.inference_endpoint_for_latin = inference_endpoint_for_latin
+
+        if not check_upstream_health:
+            return
+
         for endpoint in [
             inference_endpoint_for_mixed,
             inference_endpoint_for_arabic,
@@ -35,10 +43,6 @@ class SentimentAnalyzer:
                 raise RuntimeError(
                     f"No reachable upstream for sentiment classificaiton at {health_endpoint}"
                 )
-
-        self.inference_endpoint_for_mixed = inference_endpoint_for_mixed
-        self.inference_endpoint_for_arabic = inference_endpoint_for_arabic
-        self.inference_endpoint_for_latin = inference_endpoint_for_latin
 
     def analyze(self, text: str) -> Sentiment:
         inference_url = self.get_inference_endpoint_for_text(text)
