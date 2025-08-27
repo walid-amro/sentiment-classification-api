@@ -1,7 +1,5 @@
 #!/bin/bash
 
-git clone https://github.com/walid-amro/sentiment-classification-api
-cd sentiment-classification-api
 uv self update
 uv sync
 source .venv/bin/activate
